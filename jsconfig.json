@@ -1,0 +1,9 @@
+{
+  "_comment": "Configures project to use absolute imports instead of relative paths.",
+  "compilerOptions": {
+    "baseUrl": "src"
+  },
+  "include": [
+    "src"
+  ]
+}
