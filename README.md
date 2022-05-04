@@ -4,6 +4,8 @@ Simple reactjs webapp primarily demonstrating stytch as login-as-service.
 
 This demo app serves as an example for following tooling
 
+![architecture.png](architecture.png)
+
 1. [Stytch](https://stytch.com/) auth for login-as-service
 2. [Recoil](https://recoiljs.org/) for state management
 3. [React Router Dom v6](https://reactrouter.com/docs/en/v6/getting-started/overview) for client side routing
