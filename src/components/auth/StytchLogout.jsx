@@ -14,7 +14,7 @@ export const StytchLogout = () => {
     stytchClient.session.revoke().then((r) => {
       console.log("Revoked: " + r);
       setUserState({});
-      navigate('/');
+      navigate('/start');
     });
   }, [stytchClient, setUserState, navigate]);
 

@@ -1,9 +1,11 @@
 import {userAtom} from "atoms/userAtom";
-import {fireEvent, render, screen} from "@testing-library/react";
+import {act, fireEvent, render, screen} from "@testing-library/react";
 import {RecoilRoot} from "recoil";
 import {BrowserRouter} from "react-router-dom";
 import {StytchProvider} from "@stytch/stytch-react";
 import {StytchLogout} from "components/auth/StytchLogout";
+import makeRenderWithProviders from "../../../test/renderWithStytchClient";
+import MockStytchClient from "../../../test/MockStytchClient";
 
 describe('Logout', function () {
 
@@ -11,33 +13,33 @@ describe('Logout', function () {
     const initialUserState = ({set}) => {
       set(userAtom, {"user_id": "random-id"});
     };
-    render(
-      <StytchProvider stytch={null}>
-        <RecoilRoot initializeState={initialUserState}>
-          <BrowserRouter>
-            <StytchLogout/>
-          </BrowserRouter>
-        </RecoilRoot>
-      </StytchProvider>
-    );
+
+    const render = makeRenderWithProviders({
+      stytch: MockStytchClient,
+      initializeState: initialUserState,
+    })
+
+    render(<StytchLogout/>);
     expect(screen.getByTestId('logout-btn', {})).toBeTruthy();
   });
 
-  it('should direct to start page upon logout action', function () {
+  it('should direct to start page upon logout action', async function () {
     const initialUserState = ({set}) => {
       set(userAtom, {"user_id": "random-id"});
     };
-    render(
-      <StytchProvider stytch={null}>
-        <RecoilRoot initializeState={initialUserState}>
-          <BrowserRouter>
-            <StytchLogout/>
-          </BrowserRouter>
-        </RecoilRoot>
-      </StytchProvider>
-    );
+
+    MockStytchClient.session.revoke.mockResolvedValue({});
+
+    const render = makeRenderWithProviders({
+      stytch: MockStytchClient,
+      initializeState: initialUserState,
+    })
+
+    render(<StytchLogout/>);
     const logoutBtn = screen.getByTestId('logout-btn', {});
-    fireEvent.click(logoutBtn);
+    await act(async () => {
+      await fireEvent.click(logoutBtn);
+    });
     expect(window.location.pathname).toBe('/start');
   });
 });
