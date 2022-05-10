@@ -1,19 +1,19 @@
-import {render, screen} from "@testing-library/react";
+import {screen} from "@testing-library/react";
 import WelcomePage from "pages/WelcomePage";
 import {RecoilRoot} from "recoil";
 import {BrowserRouter} from "react-router-dom";
 import {userAtom} from "atoms/userAtom";
+import makeRenderWithProviders from "../../test/renderWithStytchClient";
+import MockStytchClient from "../../test/MockStytchClient";
 
 describe('Welcome page', function () {
 
   it('should render auth when there is no session', function () {
-    render(
-      <RecoilRoot>
-        <BrowserRouter>
-          <WelcomePage/>
-        </BrowserRouter>
-      </RecoilRoot>
-    );
+    const render = makeRenderWithProviders({
+      stytch: MockStytchClient,
+    })
+
+    render(<WelcomePage/>);
     expect(screen.getByText('Stytch User Auth Demo', {})).toBeTruthy();
   });
 
@@ -21,13 +21,13 @@ describe('Welcome page', function () {
     const initialUserState = ({set}) => {
       set(userAtom, {"user_id": "random-id"});
     };
-    render(
-      <RecoilRoot initializeState={initialUserState}>
-        <BrowserRouter>
-          <WelcomePage/>
-        </BrowserRouter>
-      </RecoilRoot>
-    );
+
+    const render = makeRenderWithProviders({
+      stytch: MockStytchClient,
+      initializeState: initialUserState,
+    })
+
+    render(<WelcomePage/>);
     expect(window.location.pathname).toBe('/dashboard');
   });
 

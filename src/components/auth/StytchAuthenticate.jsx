@@ -35,9 +35,9 @@ export const AuthenticateOAuth = () => {
         profile_picture_url: user.providers[0]['profile_picture_url']
       });
       console.log(user.user_id);
-      navigate('/start')
+      navigate('/dashboard')
     }
-  });
+  }, [user]);
 
   return <React.Fragment/>;
 };
@@ -64,9 +64,9 @@ export const AuthenticateEm = () => {
     if (user) {
       // make a call to backend to fetch user details
       // setAuthenticated(true);
-      navigate('/start');
+      navigate('/dashboard');
     }
-  });
+  }, [user]);
 
   return <React.Fragment/>;
 };

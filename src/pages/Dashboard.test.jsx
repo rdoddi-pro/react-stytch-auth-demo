@@ -4,6 +4,9 @@ import {RecoilRoot} from "recoil";
 import {BrowserRouter} from "react-router-dom";
 import Dashboard from "pages/Dashboard";
 import {StytchProvider} from "@stytch/stytch-react";
+import renderWithStytchClient from "../../test/renderWithStytchClient";
+import makeRenderWithProviders from "../../test/renderWithStytchClient";
+import MockStytchClient from "../../test/MockStytchClient";
 
 describe('Dashboard', function () {
 
@@ -11,15 +14,13 @@ describe('Dashboard', function () {
     const initialUserState = ({set}) => {
       set(userAtom, {"user_id": "random-id"});
     };
-    render(
-      <StytchProvider stytch={null}>
-        <RecoilRoot initializeState={initialUserState}>
-          <BrowserRouter>
-            <Dashboard/>
-          </BrowserRouter>
-        </RecoilRoot>
-      </StytchProvider>
-    );
+
+    const render = makeRenderWithProviders({
+      stytch: MockStytchClient,
+      initializeState: initialUserState,
+    })
+
+    render(<Dashboard/>);
     expect(screen.getByText(/Congratulations - you're logged in!/i, {})).toBeTruthy();
   });
 
